@@ -21,7 +21,7 @@ int getrandom(int min, int max) {
 
 //string production rules
 char atom[25] = "F";                      //starting string
-char Fstr[25] = "FF-[-F+F+F]+[+F-F-F]";   //F production rule
+char Fstr[25] = "FF-[-F+F+F+L]+[+F-F-F+L]";   //F production rule
 char Xstr[25] = "";                       //X production rule
 char Ystr[25] = "";                       //Y production rule
 int angle = getrandom(15, 22);            //turn angle
@@ -31,11 +31,61 @@ int length = 20;                          //forward length
 //min and max extremes for the window size
 float xmin = 0.0, xmax = 0.0, ymin = 0.0, ymax = 0.0;
 
+void drawLeaf()
+{
+    glColor3f(0, 1, 0);
+    glPointSize(5);
+    glBegin(GL_POINTS);
+    glVertex2f(CP.getX(), CP.getY());
+    glEnd();
+    glColor3f(1, 1, 0);
+}
+
+void produceStringthicc(char* st, int order, int draw, int thicc)
+{
+    float sx, sy, sa;
+    glLineWidth(thicc);
+    
+    while (*st != '\0')		// scan through each character
+    {
+        switch (*st)
+        {
+        case '[': thicc -= 2; cvs.saveTurtle(); break;
+        case ']': thicc += 2; cvs.restoreTurtle(); break;
+        case '+': cvs.turn(-angle); break;	// right turn
+        case '-': cvs.turn(angle); break;  // left turn
+        case 'F': if (order > 0)
+            produceStringthicc(Fstr, order - 1, draw, thicc);
+                else
+        {
+            cvs.forward(length, draw);
+            if (!draw)
+            {
+                if (CP.getX() < xmin)
+                    xmin = CP.getX();
+                if (CP.getX() > xmax)
+                    xmax = CP.getX();
+                if (CP.getY() < ymin)
+                    ymin = CP.getY();
+                if (CP.getY() > ymax)
+                    ymax = CP.getY();
+            }
+        }
+                break;
+        case 'X': if (order > 0)
+            produceStringthicc(Xstr, order - 1, draw, thicc); break;
+        case 'Y': if (order > 0)
+            produceStringthicc(Ystr, order - 1, draw, thicc); break;
+        }
+        st++;
+    }
+}
+
 void produceString(char* st, int order, int draw)
 {
     float sx, sy, sa;
     glLineWidth(order);
-    
+
     while (*st != '\0')		// scan through each character
     {
         switch (*st)
@@ -44,6 +94,7 @@ void produceString(char* st, int order, int draw)
         case ']': cvs.restoreTurtle(); break;
         case '+': cvs.turn(-angle); break;	// right turn
         case '-': cvs.turn(angle); break;  // left turn
+        case 'L': if (order <= 0) drawLeaf(); break;
         case 'F': if (order > 0)
             produceString(Fstr, order - 1, draw);
                 else
@@ -71,6 +122,7 @@ void produceString(char* st, int order, int draw)
     }
 }
 
+
 void myDisplay(void)
 {
    
@@ -78,7 +130,6 @@ void myDisplay(void)
     cvs.setBackgroundColor(0.0, 0.0, 0.0);
     cvs.clearScreen();
     cvs.setColor(1, 1, 0);
-   
 
     //setup initial turtle position
     //run through once to determine window coordinates
@@ -86,6 +137,8 @@ void myDisplay(void)
     cvs.turnTo(90);
     produceString(atom, 4, 0);
     cvs.setWindow(xmin - 600, xmax + 600, ymin - 600, ymax + 600);
+   
+    
     //this time draw the curve
     cvs.moveTo(0.0, 0.0);
     cvs.turnTo(90);
