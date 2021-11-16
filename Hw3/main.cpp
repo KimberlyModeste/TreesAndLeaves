@@ -36,7 +36,7 @@ int trueThicc;
 //string production rules
 char atom[100] = "F";                      //starting string
 char Fstr[100] = "FF-[-FX+FX+FX]+[+FX-FX-FX]";   //F production rule
-char Xstr[100] = "X-[FL+FL+FL]+[+FL-FL-FL]";                       //X production rule
+char Xstr[100] = "XX-[FL+FL+FL]+[+FL-FL-FL]";                       //X production rule
 char Ystr[100] = "";                       //Y production rule
 float angle = getrandom(15,22);                         //turn angle
 int length = 20;                          //forward length
