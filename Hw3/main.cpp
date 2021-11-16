@@ -3,8 +3,10 @@
 #include <stdio.h>   // use as needed for your system
 #include <math.h>
 #include <GL/glut.h>
-#define getrandom(min, max) ((rand()%(int)(((max) + 1)-(min)))+ (min))
+#include <time.h>
+#include <iostream>
 
+using namespace std;
 class Point2   //single point w/ floating point coordinates
 {
 public:
@@ -23,16 +25,22 @@ public:
 
 };
 
+int getrandom(int min, int max) {
+    srand(time(0));
+    return (rand() % (int)(((max)+1) - (min))) + (min);
+}
+
 Point2 CP;      //current turtle point
 float CD = 90;  //current turtle direction
-
+int trueThicc;
 //string production rules
-char atom[25] = "F";                      //starting string
-char Fstr[25] = "FF-[-F+F+F]+[+F-F-F]";   //F production rule
-char Xstr[25] = "";                       //X production rule
-char Ystr[25] = "";                       //Y production rule
-float angle = 22;                         //turn angle
+char atom[100] = "F";                      //starting string
+char Fstr[100] = "FF-[-FX+FX+FX]+[+FX-FX-FX]";   //F production rule
+char Xstr[100] = "X-[FL+FL+FL]+[+FL-FL-FL]";                       //X production rule
+char Ystr[100] = "";                       //Y production rule
+float angle = getrandom(15,22);                         //turn angle
 int length = 20;                          //forward length
+
 
 //array of current turtle locations
 //better to use a linked list for these :)
@@ -45,7 +53,6 @@ int curr = 0;
 float xmin = 0.0, xmax = 0.0, ymin = 0.0, ymax = 0.0;
 
 
-//-----TURTLE DRAWING FUNCTIONS- TAKEN OUT OF CANVAS.H------------------
 void moveTo(float x, float y)
 {
     CP.set(x, y);
@@ -88,22 +95,32 @@ void restoreTurtle()
     turnTo(saveAng[curr]);
 }
 
-//Draw L-System from String--------------------------------
-void produceString(char* st, int order, int draw, int thicc)
+void drawLeaf() {
+    glColor3f(0, 1, 0);
+    glPointSize(5);
+    glBegin(GL_POINTS);
+    glVertex2f(CP.x, CP.y);
+    glEnd();
+    glColor3f(1, 1, 0);
+}
+
+void produceStringThicc(char* st, int order, int draw, float thicc)
 {
     float sx, sy, sa;
     glLineWidth(thicc);
 
     while (*st != '\0')		// scan through each character
     {
+       // cout << thicc << " ";
         switch (*st)
         {
-        case '[': thicc-=2; saveTurtle(); break;
-        case ']': thicc+=2; restoreTurtle(); break;
+        case '[': if(thicc >= 1) thicc/=3; saveTurtle(); break;
+        case ']': if (thicc <= trueThicc) thicc*=3; restoreTurtle(); break;
         case '+': turn(-angle); break;	// right turn
         case '-': turn(angle); break;  // left turn
+        case 'L': if (order <= 0) { drawLeaf(); }break;
         case 'F': if (order > 0)
-            produceString(Fstr, order - 1, draw, thicc);
+            produceStringThicc(Fstr, order - 1, draw, thicc);
                 else
         {
             forward(length, draw);
@@ -121,16 +138,57 @@ void produceString(char* st, int order, int draw, int thicc)
         }
                 break;
         case 'X': if (order > 0)
-            produceString(Xstr, order - 1, draw, thicc); break;
+            produceStringThicc(Xstr, order - 1, draw, thicc); break;
         case 'Y': if (order > 0)
-            produceString(Ystr, order - 1, draw, thicc); break;
+            produceStringThicc(Ystr, order - 1, draw, thicc); break;
+        }
+        st++;
+    }
+    //cout << endl;
+}
+
+void produceString(char* st, int order, int draw)
+{
+    float sx, sy, sa;
+    glLineWidth(order);
+
+    while (*st != '\0')		// scan through each character
+    {
+        switch (*st)
+        {
+        case '[': saveTurtle(); break;
+        case ']': restoreTurtle(); break;
+        case '+': turn(-angle); break;	// right turn
+        case '-': turn(angle); break;  // left turn
+        case 'L': if (order <= 0) { drawLeaf(); }break;
+        case 'F': if (order > 0)
+            produceString(Fstr, order - 1, draw);
+                else
+        {
+            forward(length, draw);
+            if (!draw)
+            {
+                if (CP.x < xmin)
+                    xmin = CP.x;
+                if (CP.x > xmax)
+                    xmax = CP.x;
+                if (CP.y < ymin)
+                    ymin = CP.y;
+                if (CP.y > ymax)
+                    ymax = CP.y;
+            }
+        }
+                break;
+        case 'X': if (order > 0)
+            produceString(Xstr, order - 1, draw); break;
+        case 'Y': if (order > 0)
+            produceString(Ystr, order - 1, draw); break;
         }
         st++;
     }
 }
 
 
-//<<<<<<<<<<<<<<<<<<<<<<<< myDisplay >>>>>>>>>>>>>>>>>
 void myDisplay(void)
 {
     CP.set(0, 0);
@@ -140,18 +198,19 @@ void myDisplay(void)
     glClear(GL_COLOR_BUFFER_BIT);
     glColor3f(1, 1, 0);
     glLineWidth(10.0f);
-    int thicc = 8;
+    int thicc = 20;
+    trueThicc = thicc;
     //setup initial turtle position
     //run through once to determine window coordinates
     moveTo(0.0, 0.0);
     turnTo(90);
-    produceString(atom, 4, 0, thicc);
+    produceStringThicc(atom, 4, 0, thicc);
     gluOrtho2D(xmin - 10, xmax + 10, ymin - 10, ymax + 10);
 
     //this time draw the curve
     moveTo(0.0, 0.0);
     turnTo(90);
-    produceString(atom, 4, 1, thicc);
+    produceStringThicc(atom, 4, 1, thicc);
     glFlush();		                 // send all output to display
 }
 
@@ -161,7 +220,7 @@ void main(int argc, char** argv)
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB); // set display mode
     glutInitWindowSize(600, 600);     // set window size
     glutInitWindowPosition(100, 150); // set window position on screen
-    glutCreateWindow("L-System Tree"); // open the screen window and set the name
+    glutCreateWindow("Trees and Leaves"); // open the screen window and set the name
     glutDisplayFunc(myDisplay);     // register redraw function
     glutMainLoop();
 }
