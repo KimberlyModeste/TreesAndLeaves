@@ -34,6 +34,8 @@ Point2 CP;      //current turtle point
 float CD = 90;  //current turtle direction
 int trueThicc;
 //string production rules
+
+
 char atom[100] = "F";                      //starting string
 char Fstr[100] = "FF-[-FX+FX+FX]+[+FX-FX-FX]";   //F production rule
 char Xstr[100] = "XX-[FL+FL+FL]+[+FL-FL-FL]";                       //X production rule
@@ -51,7 +53,6 @@ int curr = 0;
 
 //min and max extremes for the window size
 float xmin = 0.0, xmax = 0.0, ymin = 0.0, ymax = 0.0;
-
 
 void moveTo(float x, float y)
 {
@@ -138,6 +139,7 @@ void produceStringThicc(char* st, int order, int draw, float thicc)
         }
                 break;
         case 'X': if (order > 0)
+
             produceStringThicc(Xstr, order - 1, draw, thicc); break;
         case 'Y': if (order > 0)
             produceStringThicc(Ystr, order - 1, draw, thicc); break;
@@ -200,6 +202,7 @@ void myDisplay(void)
     glLineWidth(10.0f);
     int thicc = 20;
     trueThicc = thicc;
+  
     //setup initial turtle position
     //run through once to determine window coordinates
     moveTo(0.0, 0.0);
