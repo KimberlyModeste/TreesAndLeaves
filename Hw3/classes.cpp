@@ -66,6 +66,9 @@ void Canvas::lineTo(Point2 p) {
     CP.set(p.getX(), p.getY());
     glFlush();
 }
+void Canvas::setLW(float w) {
+    glLineWidth(w);
+}
 
 Canvas::Canvas(int width, int height, char* windowTitle) {
     char* argv[1];  //dummy argument list for glutinit()
@@ -76,7 +79,7 @@ Canvas::Canvas(int width, int height, char* windowTitle) {
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
     glutInitWindowSize(width, height);
-    glutInitWindowPosition(20, 20);
+    glutInitWindowPosition(100, 150);
     glutCreateWindow(windowTitle);
     setWindow(0, (float)width, 0, (float)height); // default world window
     setViewport(0, width, 0, height); //default viewport
@@ -103,9 +106,12 @@ void Canvas::forward(float dist, int vis)
 #define RadPerDeg 0.017453393 //radians per degree 
 	float x = CP.getX() + dist * cos(RadPerDeg * CD);
 	float y = CP.getY() + dist * sin(RadPerDeg * CD);
-	if (vis) lineTo(x, y);
-	else moveTo(x, y);
-    CP.set(x, y);
+
+	if (vis) 
+        lineTo(x, y);
+	else 
+        moveTo(x, y);
+        CP.set(x, y);
 }
 
 void Canvas::ngon(int n, float cx, float cy, float radius)
@@ -132,4 +138,18 @@ void Canvas::lineRel(float dx, float dy) {
     float x = CP.getX() + dx, y = CP.getY() + dy;
     lineTo(x, y);
     CP.set(x, y);
+}
+
+void Canvas::saveTurtle()
+{
+    saveTut[curr].set(CP.getX(), CP.getY());
+    saveAng[curr] = CD;
+    curr++;
+}
+
+void Canvas::restoreTurtle()
+{
+    curr--;
+    moveTo(saveTut[curr].getX(), saveTut[curr].getY());
+    turnTo(saveAng[curr]);
 }
