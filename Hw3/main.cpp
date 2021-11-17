@@ -33,7 +33,7 @@ int getrandom(int min, int max) {
 Point2 CP;      //current turtle point
 float CD = 90;  //current turtle direction
 int trueThicc;
-int gid = 2; //1-4 Spring, Summer, Fall, Winter
+int gid = 1; //1-4 Spring, Summer, Fall, Winter
 float trunk[] = { 0.16, 0.13, 0.07 };
 float leafBase[] = { 0.82, 0.54, 0.65 };
 float leafTop[] = { 0.91, 0.8, 0.82 };
