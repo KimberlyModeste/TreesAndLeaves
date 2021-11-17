@@ -394,7 +394,9 @@ void main(int argc, char** argv)
     glutInitWindowSize(600, 600);     // set window size
     glutCreateWindow("Trees and Leaves"); // open the screen window and set the name
 
-    //glutDisplayFunc(myDisplay);    
-    glutDisplayFunc(parkDisplay);    
+    //Basic Drawing
+    glutDisplayFunc(myDisplay); 
+    //Park display 
+    //glutDisplayFunc(parkDisplay);    
     glutMainLoop();
 }
