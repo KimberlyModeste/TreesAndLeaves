@@ -1,6 +1,6 @@
 //CSC470 HW3
 //Kimberly Modeste
-#include <stdio.h>   // use as needed for your system
+#include <stdio.h>
 #include <math.h>
 #include <GL/glut.h>
 #include <time.h>
@@ -41,17 +41,17 @@ float grass[] = { 0.61, 0.72, 0.19 };
 float grassBench[] = { 0.44, 0.56, 0.0 };
 
 //string production rules
-char atomNL[100] = "F";
-char FstrNL[100] = "FF-[-F+F+F]+[+F-F-F]";
-char XstrNL[100] = "";                       //X production rule
+char atomNL[100] = "F";                      //No leaves starting string
+char FstrNL[100] = "FF-[-F+F+F]+[+F-F-F]";   //No leaves F
+char XstrNL[100] = "";                       //No leaves X
 
 
-char atom[100] = "F";                      //starting string
+char atom[100] = "F";                            //starting string
 char Fstr[100] = "FF-[-FX+FX+FX]+[+FX-FX-FX]";   //F production rule
-char Xstr[100] = "XX-[FL+FL+FL]+[+FL-FL-FL]";                       //X production rule
-char Ystr[100] = "";                       //Y production rule
-float angle = getrandom(15,22);                         //turn angle
-int length = 20;                          //forward length
+char Xstr[100] = "XX-[FL+FL+FL]+[+FL-FL-FL]";    //X production rule
+char Ystr[100] = "";                             //Y production rule
+float angle = getrandom(15,22);                  //turn angle
+int length = 20;                                 //forward length
 
 
 //array of current turtle locations
@@ -63,7 +63,6 @@ int curr = 0;
 
 //min and max extremes for the window size
 float xmin = 0.0, xmax = 0.0, ymin = 0.0, ymax = 0.0;
-
 
 
 void moveTo(float x, float y)
@@ -83,6 +82,7 @@ void lineTo(float x, float y)
 
 void turnTo(float angle) { CD = angle; }
 void turn(float angle) { CD += angle; }
+
 void forward(float dist, int isVisible)
 {
     const float rpd = 0.017453393;
@@ -187,8 +187,8 @@ void myDisplay(void)
 
     trunk[0] = 1;       trunk[1] = 1;       trunk[2] = 0;
     leafBase[0] = 0;    leafBase[1] = 1;    leafBase[2] = 0;
-    leafTop[0] = 0.8;  leafTop[1] = 0.8;  leafTop[2] = 0.8;
-
+    leafTop[0] = 0.0;  leafTop[1] = 1;  leafTop[2] = 0.0;
+    
 
     glColor3fv(trunk);
     int thicc = 20;
@@ -205,7 +205,7 @@ void myDisplay(void)
     moveTo(0.0, 0.0);
     turnTo(90);
     produceStringThicc(atom, 4, 1, thicc);
-    glFlush();		                 // send all output to display
+    glFlush();		               
 }
 
 void makeTree(int x, int y, int thicc, int newAngle, int t) 
@@ -255,7 +255,6 @@ void seasonMenu() {
     }
 
 }
-
 
 void parkDisplay()
 {
