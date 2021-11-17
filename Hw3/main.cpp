@@ -396,6 +396,7 @@ void main(int argc, char** argv)
 
     //Basic Drawing
     glutDisplayFunc(myDisplay); 
+
     //Park display 
     //glutDisplayFunc(parkDisplay);    
     glutMainLoop();
