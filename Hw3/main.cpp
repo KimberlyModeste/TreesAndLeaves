@@ -672,7 +672,11 @@ void creativeBDisplay() {
     glVertex2i(-160, 700);
     glEnd();
     srand(time(0));
-    for (int i = 0; i < 30; i++) {
+    for (int i = 0; i < 30; i++) 
+    {
+        if(gid == 8)
+        glColor3f(0.9, 0.9, 0.9);
+        else
         glColor3f(0.5, 0.5, 0.5);
         makeRocks(-1200 + (i * 100), -950, rand()%50 +50);
     }
@@ -693,11 +697,11 @@ void main(int argc, char** argv)
     glutInitWindowSize(600, 600);     // set window size
     glutCreateWindow("Trees and Leaves"); // open the screen window and set the name
    //1-4 = Basic 5-8 CreativeB
-    gid = 8;
+    gid = 1;
 
 
     //Basic Drawing A
-    //glutDisplayFunc(basicADisplay); 
+    glutDisplayFunc(basicADisplay); 
 
     //Basic Drawing B
     //glutDisplayFunc(basicBDisplay);    
@@ -707,7 +711,7 @@ void main(int argc, char** argv)
 
     //Creative Drawing B
     //IT TAKES 1 MINUTE AND 16 SECONDS FOR THIS TO FINISH RUNNING
-    glutDisplayFunc(creativeBDisplay);
+   //glutDisplayFunc(creativeBDisplay);
 
     glutMainLoop();
 }
