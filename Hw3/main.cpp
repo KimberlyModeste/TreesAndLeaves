@@ -80,6 +80,7 @@ int curr = 0;
 float xmin = 0.0, xmax = 0.0, ymin = 0.0, ymax = 0.0;
 
 
+
 void moveTo(float x, float y)
 {
     CP.set(x, y);
@@ -93,6 +94,19 @@ void lineTo(float x, float y)
     glEnd();
     CP.set(x, y); //update current point to new point
     glFlush();
+}
+
+void ngon(int n, float cx, float cy, float radius, float rotAngle) {
+    if (n < 3) return;
+    double angle = rotAngle * 3.14159265 / 180;
+    double angleInc = 2 * 3.14159265 / n;
+    moveTo(radius + cx, cy);
+
+    for (int k = 0; k < n; k++)
+    {
+        angle += angleInc;
+        lineTo(radius * cos(angle) + cx, radius * sin(angle) + cy);
+    }
 }
 
 void turnTo(float angle) { CD = angle; }
@@ -357,6 +371,22 @@ void makeChair(int x, int y)
     glEnd();
 }
 
+void makeRocks(int x, int y, int r)
+{
+    
+    float theta;
+    glBegin(GL_POLYGON);
+    for (int i = 0; i < 360; i++)
+    {
+        theta = i * 3.14159265 / 180;
+        glVertex2f(r * cos(theta) + x, r * sin(theta) + y);
+    }
+    glEnd();
+    glColor3f(0.0, 0.0, 0.0);
+    ngon(50, x, y, r, 0);
+
+}
+
 void seasonMenu() {
 
     //Spring
@@ -434,8 +464,8 @@ void seasonMenu() {
     else if (gid == 8)
     {
         appleColor[0] = 0.9;  appleColor[1] = 0.9; appleColor[2] = 1.0;
-        grass[0] = 0.9; grass[1] = 0.9; grass[2] = 0.9;
-        grass2[0] = 0.8; grass2[1] = 0.8; grass2[2] = 0.8;
+        grass[0] = 0.8; grass[1] = 0.8; grass[2] = 0.8;
+        grass2[0] = 0.9; grass2[1] = 0.9; grass2[2] = 0.9;
         grassBench[0] = 0.6; grassBench[1] = 0.6; grassBench[2] = 0.6;
         sky1[0] = 0.41; sky1[1] = 0.43; sky1[2] = 0.55;
         sky2[0] = 0.92; sky2[1] = 0.91; sky2[2] = 0.90;
@@ -591,7 +621,7 @@ void creativeBDisplay() {
     glVertex2i(1200, 300);
     glVertex2i(-1200, 300);
     glEnd();
-
+    
     //Tree 1B
     makeTree(-600, 0, thicc, angle, 1);
     //Tree2B
@@ -604,13 +634,54 @@ void creativeBDisplay() {
     makeTree(-200, -200, getrandom(20, 30), getrandom(15, 25), 1);
     //Tree 6M
     makeTree(700, -250, getrandom(20, 30), getrandom(15, 25), 1);
-
+    
     //Path
     glColor3f(0.59, 0.52, 0.34);
+    if(gid != 8)
     glRecti(-1200, -1000, 1200, -1200);
 
     makeChair(0, 0);
-    makeChair(1000, 0);
+    makeChair(1500, 0);
+
+    glColor3f(0.0, 0.0, 0.0);
+    glBegin(GL_POLYGON);
+    glVertex2i(-100, -900);
+    glVertex2i(-100, 600);
+    glVertex2i(-120, 600);
+    glVertex2i(-120, -900);
+    glEnd();
+    glColor3f(0.8, 0.8, 0.8);
+    glBegin(GL_POLYGON);
+    glVertex2i(-140, 600);
+    glVertex2i(-160, 700);
+    glVertex2i(-60, 700);
+    glVertex2i(-80, 600);
+    glEnd();
+    glColor3f(0.0, 0.0, 0.0);
+    glBegin(GL_LINE_STRIP);
+    glVertex2i(-140, 600);
+    glVertex2i(-160, 700);
+    glVertex2i(-60, 700);
+    glVertex2i(-80, 600);
+    glVertex2i(-140, 600);
+    glEnd();
+    glColor3f(0.0, 0.0, 0.0);
+    glBegin(GL_POLYGON);
+    glVertex2i(-60, 700);
+    glVertex2i(-110, 750);
+    glVertex2i(-160, 700);
+    glEnd();
+    srand(time(0));
+    for (int i = 0; i < 30; i++) {
+        glColor3f(0.5, 0.5, 0.5);
+        makeRocks(-1200 + (i * 100), -950, rand()%50 +50);
+    }
+    
+
+
+
+    glColor3fv(trunk);
+
     glFlush();
 }
 
@@ -621,8 +692,8 @@ void main(int argc, char** argv)
     glutInitWindowPosition(30, 30); // set window position on screen
     glutInitWindowSize(600, 600);     // set window size
     glutCreateWindow("Trees and Leaves"); // open the screen window and set the name
-   //1-4 = Basic
-    gid = 7;
+   //1-4 = Basic 5-8 CreativeB
+    gid = 8;
 
 
     //Basic Drawing A
@@ -635,6 +706,7 @@ void main(int argc, char** argv)
     //lutDisplayFunc(creativeADisplay);
 
     //Creative Drawing B
+    //IT TAKES 1 MINUTE AND 16 SECONDS FOR THIS TO FINISH RUNNING
     glutDisplayFunc(creativeBDisplay);
 
     glutMainLoop();
