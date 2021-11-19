@@ -62,7 +62,7 @@ char Xstr[100] = "XX-[FL+FL+FL]+[+FL-FL-FL]";    //X production rule
 char Ystr[100] = "";                             //Y production rule
 
 char XstrA[100] = "XX-[FN+FNY+FN]+[+FN-FN-FN]";    //X production rule
-char YstrA[100] = "YY-[FN+FN]+[+FNA]";
+char YstrA[100] = "YY-[FNW+FN]+[+FNA]";
 
 
 float angle = getrandom(15,22);                  //turn angle
@@ -232,7 +232,8 @@ void produceStringThicc(char* st, int order, int draw, float thicc)
         case '-': turn(angle); break;  // left turn
         case 'L': if (order <= 0) { drawLeaf(); }break;
         case 'N': if (order <= 0) { if(gid >= 5 && gid < 8)newLeaf(thicc); } break;
-        case 'A': if (order <= 0) { if (gid == 8) makeSnow(); else makeApple(); }
+        case 'A': if (order <= 0) { if (gid != 8)  makeApple(); } break;
+        case 'W': if (order <= 0) { if (gid == 8) makeSnow(); } break;
         case 'F': if (order > 0)
         {
             if(gid == 4 )
@@ -697,7 +698,7 @@ void main(int argc, char** argv)
     glutInitWindowSize(600, 600);     // set window size
     glutCreateWindow("Trees and Leaves"); // open the screen window and set the name
    //1-4 = Basic 5-8 CreativeB
-    gid = 1;
+    gid = 8;
 
 
     //Basic Drawing A
@@ -711,7 +712,7 @@ void main(int argc, char** argv)
 
     //Creative Drawing B
     //IT TAKES 1 MINUTE AND 16 SECONDS FOR THIS TO FINISH RUNNING
-   //glutDisplayFunc(creativeBDisplay);
+     glutDisplayFunc(creativeBDisplay);
 
     glutMainLoop();
 }
