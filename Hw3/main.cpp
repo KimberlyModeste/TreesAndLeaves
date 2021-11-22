@@ -695,11 +695,11 @@ void main(int argc, char** argv)
     glutInitWindowSize(600, 600);     // set window size
     glutCreateWindow("Trees and Leaves"); // open the screen window and set the name
    //1-4 = Basic 5-8 CreativeB
-    gid = 8;
+    gid = 1;
 
 
     //Basic Drawing A
-    //glutDisplayFunc(basicADisplay); 
+    glutDisplayFunc(basicADisplay); 
 
     //Basic Drawing B
     //glutDisplayFunc(basicBDisplay);    
