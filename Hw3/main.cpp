@@ -682,9 +682,6 @@ void creativeBDisplay() {
         makeRocks(-1200 + (i * 100), -950, rand()%50 +50);
     }
     
-
-
-
     glColor3fv(trunk);
 
     glFlush();
@@ -698,21 +695,38 @@ void main(int argc, char** argv)
     glutInitWindowSize(600, 600);     // set window size
     glutCreateWindow("Trees and Leaves"); // open the screen window and set the name
    //1-4 = Basic 5-8 CreativeB
-    gid = 1;
+    gid = 8;
 
 
     //Basic Drawing A
-     glutDisplayFunc(basicADisplay); 
+    //glutDisplayFunc(basicADisplay); 
 
     //Basic Drawing B
     //glutDisplayFunc(basicBDisplay);    
 
     //Creative Drawing A
-    //lutDisplayFunc(creativeADisplay);
+    //glutDisplayFunc(creativeADisplay);
 
     //Creative Drawing B
     //IT TAKES 1 MINUTE AND 16 SECONDS FOR THIS TO FINISH RUNNING
-    //glutDisplayFunc(creativeBDisplay);
+    glutDisplayFunc(creativeBDisplay);
 
     glutMainLoop();
 }
+/* TIME TURBO
+   Basic Drawing A: 00:09
+   Basic Drawing B
+   Spring: 00:48
+   Summer: 00:48
+   Fall:   00:48
+   Winter: 00:15
+
+   Creative Drawing A: 00:09
+   Creative Drawing B
+   Spring: 00:51
+   Summer: 00:54
+   Fall:   00:54
+   Winter: 00:50
+
+   Record Breaker since timing: 01:16
+*/
