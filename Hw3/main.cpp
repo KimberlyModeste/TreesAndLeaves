@@ -709,7 +709,7 @@ void main(int argc, char** argv)
 
     //Creative Drawing B
     //IT TAKES 1 MINUTE AND 16 SECONDS FOR THIS TO FINISH RUNNING
-    glutDisplayFunc(creativeBDisplay);
+    //glutDisplayFunc(creativeBDisplay);
 
     glutMainLoop();
 }
